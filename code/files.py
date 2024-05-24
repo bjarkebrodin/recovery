@@ -2,6 +2,7 @@ from os import listdir as _listdir, sep as _sep, stat as _stat
 from os.path import isdir as _isdir, exists as _exists, isfile as _isfile, expandvars as _expandvars, expanduser as _expanduser, islink as _islink, abspath as _abspath
 from stat import FILE_ATTRIBUTE_HIDDEN as _HIDDEN_BIT
 from inspect import stack as _stack
+from re import match as _match
 
 
 class Path():
@@ -15,7 +16,7 @@ class Path():
     path = _abspath(path)
 
     if not _exists(path): 
-      raise FileNotFoundError(f'{path} does not exist!')
+      raise FileNotFoundError(f'{path} does not exist! length={len(path)}')
 
     self._parts = path.split(_sep)
     self.parent = _sep.join(self._parts[:-1])
@@ -28,7 +29,7 @@ class Path():
   def isfile(self): return _isfile(self.path)
   def islink(self): return _islink(self.path)
 
-  def ishidden(self): return not self.name.startswith('.') and not bool(_stat(self.path).st_file_attributes & _HIDDEN_BIT)
+  def ishidden(self): return self.name.startswith('.') or bool(_stat(self.path).st_file_attributes & _HIDDEN_BIT)
 
   def children(self):
 
@@ -47,21 +48,17 @@ class Path():
       return f.readlines()
 
   
-  def delve(self, include_hidden=False, follow_links=False):
+  def delve(self, include_hidden=False, follow_links=False, ignore=[]):
+    include = not any([_match(i, self.path) is not None for i in ignore])
+    follow = (not self.ishidden()) or include_hidden
 
-    if not include_hidden and self.ishidden():
+    if include and follow:
 
       if self.isfile():
         yield self
 
       if (not self.islink() or follow_links) and self.isdir(): 
         for child in self.children():
-          for result in child.delve():
+          for result in child.delve(ignore=ignore):
             yield result
       
-
-    
-
-
-
-

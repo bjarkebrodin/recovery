@@ -1,58 +1,9 @@
-from typing import List, TypeVar, Set, Callable
+from typing import List, Dict, Set
 from files import Path
-from re import match
-from os import sep
-
-
-###########################################################################################
-### JS UTILS: TODO: MOVE INTO OWN FILE
-
-# Inspired by Mircea Lungo's code found at:
-# https://colab.research.google.com/drive/1oe_TV7936Zmmzbbgq8rzqFpxYPX7SQHP#scrollTo=0ruTtX88Tb-w
-# accessed at 18:38 CET on 27-05-2024
-def extract_module(file: Path) -> str:
-  return file.path.split('src\\')[-1].replace('\\','.').replace('.js','').replace('.sc','')
-
-T = TypeVar('T')
-def flatten(l: List[List[T]]) -> List[T]:
-  return [x for y in l for x in y]
-
-def is_local_import(s: str) -> bool: 
-  return '.' in s
-
-def to_module_path_from_relative(file: Path) -> Path: 
-  return lambda s: Path(sep.join(file.path.split(sep)[:-1]) + sep + s.replace('/', sep).replace('.js', '') + '.js')
-
-def extract_js_imports(file: Path, ignore: List[str] = []) -> List[str]:
-
-  def _extractor(linefilter: Callable[[str], bool], linemapping: Callable[[str], str]) -> Callable[[], str]:
-    def __result_extractor():
-      return list(
-        map(extract_module,
-        map(to_module_path_from_relative(file),
-        filter(is_local_import,
-        map(linemapping,
-        filter(linefilter,
-        file.contents()))))))
-    
-    return __result_extractor
-
-  # Gets only singleline from imports such as "import component from 'module';"
-  _from_import_linefilter = lambda line: line.startswith('import') and ';' in  line and 'from' in line and not any([match(i, line) is not None for i in ignore])
-  _from_import_linemapping = lambda line: line.replace(';', '').replace('"', '').strip().replace('\n', '').split('from')[-1].strip()
-  _from_import_extractor = _extractor(_from_import_linefilter, _from_import_linemapping)
-    
-  # Gets only singleline flat imports such as "import './module';"
-  _flat_import_linefilter = lambda line: line.startswith('import') and ';' in line and 'from' not in line and not any([match(i, line) is not None for i in ignore])
-  _flat_import_linemapping = lambda line: line.replace(';', '').replace('"', '').strip().replace('\n', '').split(' ')[-1].strip()
-  _flat_import_extractor = _extractor(_flat_import_linefilter, _flat_import_linemapping)
-
-  from_imports = _from_import_extractor()
-  flat_imports = _flat_import_extractor()
-    
-  return from_imports + flat_imports
-###########################################################################################
-
+from js_utils import extract_js_imports, extract_module
+from common import flatten
+import pyvis as vis
+import networkx as nx
 
 def main():
 
@@ -63,21 +14,55 @@ def main():
     '.*notes.*',
     '.*public.*',
     '.*.json',
+    '.*.css',
+    '.*.md',
   ]
 
   ignore_imports: List[str] = [
-    ".*.css",
-    ".*.json",
+    ".*.css", # not interested in css import data for now
+    ".*.json", # not interested in json import data for now either
+    ".*i18n.*", # these are translations and pretty much just noise, remember to mention in report
+    # thought about ignoring components.colors in here, but that's actually interesting because color seems very coupled!,
+    # routing was also a candidate but 'components.LoadingAnimation' imports router so this seems interesting as well!!!,
   ]
+
+
 
 
   codefiles: List[Path] = list(Path('./src').delve(ignore=ignore_files))
   modules: Set[str] = set(map(extract_module, codefiles))
-  outrefs = None
-  increfs = None
 
+  imports: Dict[str, Set[str]] = { m: set() for m in modules } 
   for f in codefiles:
-    print(extract_module(f), '<-', extract_js_imports(f, ignore=ignore_imports))
+    imports[extract_module(f)].update(extract_js_imports(f, ignore=ignore_imports))
+
+  exports: Dict[str, Set[str]] = { m: set() for m in flatten(imports.values()) }
+  for module, module_imports in imports.items():
+    for i in module_imports:
+      exports[i].update(module)
+
+
+  graph_nodes = modules 
+
+  nx_graph = nx.Graph()
+  nx_graph.add_nodes_from(graph_nodes)
+
+
+  for module, module_imports in imports.items():
+    for i in module_imports:
+      nx_graph.add_edge(module, i)
+
+  nt = vis.network.Network(height="1800px", width="100%", bgcolor="#222222", font_color="white", directed=True)
+  nt.from_nx(nx_graph)
+  for node in nt.nodes:
+    if node['id'] not in exports: continue
+    nodesize = len(exports[node['id']])
+    node['size'] = nodesize
+
+  nt.show('raw_imports.html', notebook=False)
+
+  # todo: make direction clearer!
+  # todo: make text more visible and sized based on dot size?
 
   # todo: abstract modules into a tree to work with abstraction hierarchy
   # todo: look at truck

@@ -63,10 +63,12 @@ Code can be found at \href{https://github.com/bjarkebrodin/recovery}{https://git
 or if for some reason inaccessible is also uploaded as an appendix (see Appendix \ref{apx:b}).
 I do this by first extracting the imports between files (see \ref{fig:d:raw})
 then subsequently I abstract to top-level modules and consider only imports in between such modules (see \ref{fig:d:abs} and \ref{fig:d:clean}).
+This approach is very similar to the one demonstrated by Mircea Lungo in the reconstruction lectures\cite{reconstruction}.
 These networks are visualized dynamically as html files and the reader can inspect them at will from the repository,
 to make the data inspectable they are programmed with tooltips that show detailed information about nodes (see ), and edges (see ).
 I visualize the gathered data and attempt to infer interesting facts about the architecture.
 The outcome of this step is described in more detail throughout the remainder of this paper.
+I use the tools \verb|pyvis|\cite{pyvis} and \verb|networkx|\cite{networkx} to help me do this without implementing graphs and visualisation myself.
 
 \subsection{Superficially assesing external dependency health -- npm audit}
 

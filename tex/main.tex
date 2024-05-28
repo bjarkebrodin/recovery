@@ -3,16 +3,26 @@
 \usepackage{graphicx}
 \usepackage{pdfpages}
 \usepackage{fullpage}
+\usepackage{hyperref}
 
-\title{Architecture Reconstructing - Zeegu-Rea}
+\title{Architecture Reconstruction: Zeegu-React \\ \normalsize Software Architecture, MSc (Spring 2024) \\ KSSOARC2KU \\}
 \author{Bjarke Brodin Larsen -- bjal@itu.dk}
+
 
 \begin{document}
 \maketitle
 
 \section{Introduction}
 
+\href{https://zeeguu.com}{Zeegu} is a language learning assistance tool
+that helps users learn by reading and revising previously read language on a word-by-word basis.
+It contains serveral features such as tracking progress and providing material for language learning
+with on demand translations.
 
+\vspace*{1em}\noindent
+The front-end of Zeegu is the subject matter of this paper.
+More specifically, I attempt to recover information about its architecture,
+and subsequently reflect on the results of said recovery.
 
 \section{Methodology: tooling and process step-by-step}
 
@@ -27,23 +37,55 @@ text-parsing task, I utilized ChatGPT\cite{gpt4} to summarize the
 contents of the repository and get an introductory idea 
 (see Appendix \ref{apx:a}).
 Because ChatGPT can search the web it surprised me by being adept at 
-suggesting tools for further inspection which came in extremely handy!
+suggesting tools for further inspection which might have come in handy!
+
+\subsection{Getting a more exact feel of function -- running the system}
+
 After quickly getting some hints and a notion about what system I am dealing with,
-I would normally proceed to attempt building and running the system,
-this however requires me to understand and setup a back-end as well,
-so I defer this until it may or may not become necessary.
+I proceed to run the system using the online beta deployment hosted at \href{https://zeeguu.com}{https://zeeguu.com}.
+This is mostly to probe the system functionality and improve my mental map of how the codebase manifests to the user.
 
-\subsection{Getting an idea about what code is being touched the most -- }
+\subsection{Researching and briefly parsing the code manually}
+
+By reviewing and researching the React framework on which the subject codebase is built,
+and subsequently simply looking at the code. 
+I attempt to acquire a feel for how the code fits together,
+how are string translations handled,
+how are components themed and global variables managed,
+how is routing done.
+
+\subsection{Mining data and producing a module view -- python3, networkx, pyvis}
+
+With a pretty good idea about the overall system structure,
+I begin semi-automatically attempting to map the codebase using python.
+Code can be found at \href{https://github.com/bjarkebrodin/recovery}{https://github.com/bjarkebrodin/recovery},
+or if for some reason inaccessible is also uploaded as an appendix (see Appendix \ref{apx:b}).
+I do this by first extracting the imports between files
+then subsequently I abstract to top-level modules and consider only imports in between such modules (not within them).
+I visualize the gathered data and attempt to infer interesting facts about the architecture.
+The outcome of this step is described in more detail throughout the remainder of this paper.
+
+\subsection{Superficially assesing external dependency health -- npm audit}
+
+As a finishing step, only because it is so easily available in npm projects:
+to quickly ascertain the health of external dependencies used I run \verb|npm audit|
+to get an idea about how much (potential) debt there might be in the way external dependencies are used.
 
 
-\subsection{}
-
-% npm audit?
 
 \section{Results}
+% show views
+placeholder
 
 
 \section{Discussion}
+% reflect on views
+placeholder
+
+
+\section{Summary}
+% brief recap
+placeholder
 
 
 \bibliography{lit}
@@ -56,5 +98,21 @@ so I defer this until it may or may not become necessary.
 \section{ChatGPT Transcript}
 \label{apx:a}
 \includepdf[width=\textwidth,pages=-]{appendix/chatgpt.pdf}
+
+\section{Uploaded Files}
+\label{apx:b}
+\begin{itemize}
+  \item \verb|recovery.zip| -- repository containing code for architectural recovery
+\end{itemize}
+
+\section{Approximate Time Allocation}
+\label{apx:c}
+\begin{itemize}
+  \item Development \& tool learning: 60\%
+  \item Researching react: 5\%
+  \item Playing with/wrangling data: 10\%
+  \item Reflecting on results: 10\%
+  \item Writing: 15\%
+\end{itemize}
 
 \end{document}

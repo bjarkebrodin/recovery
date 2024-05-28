@@ -11,6 +11,7 @@
 
 \begin{document}
 \maketitle
+\tableofcontents
 
 \section{Introduction}
 
@@ -60,8 +61,10 @@ With a pretty good idea about the overall system structure,
 I begin semi-automatically attempting to map the codebase using python.
 Code can be found at \href{https://github.com/bjarkebrodin/recovery}{https://github.com/bjarkebrodin/recovery},
 or if for some reason inaccessible is also uploaded as an appendix (see Appendix \ref{apx:b}).
-I do this by first extracting the imports between files
-then subsequently I abstract to top-level modules and consider only imports in between such modules (not within them).
+I do this by first extracting the imports between files (see \ref{fig:d:raw})
+then subsequently I abstract to top-level modules and consider only imports in between such modules (see \ref{fig:d:abs} and \ref{fig:d:clean}).
+These networks are visualized dynamically as html files and the reader can inspect them at will from the repository,
+to make the data inspectable they are programmed with tooltips that show detailed information about nodes (see ), and edges (see ).
 I visualize the gathered data and attempt to infer interesting facts about the architecture.
 The outcome of this step is described in more detail throughout the remainder of this paper.
 
@@ -74,8 +77,11 @@ to get an idea about how much (potential) debt there might be in the way externa
 
 
 \section{Results}
+
 % show views
 placeholder
+
+
 
 
 \section{Discussion}
@@ -93,18 +99,21 @@ placeholder
 
 \clearpage
 \appendix
-\section*{Appendix}
-
 \section{ChatGPT Transcript}
 \label{apx:a}
-\includepdf[width=\textwidth,pages=-]{appendix/chatgpt.pdf}
+\begin{figure}[h]
+\includepdf[width=\textwidth,pages=1]{appendix/chatgpt.pdf}
+\end{figure}
+\includepdf[width=\textwidth,pages=2-]{appendix/chatgpt.pdf}
 
+\clearpage
 \section{Uploaded Files}
 \label{apx:b}
 \begin{itemize}
   \item \verb|recovery.zip| -- repository containing code for architectural recovery
 \end{itemize}
 
+\clearpage
 \section{Approximate Time Allocation}
 \label{apx:c}
 \begin{itemize}
@@ -114,5 +123,57 @@ placeholder
   \item Reflecting on results: 10\%
   \item Writing: 15\%
 \end{itemize}
+
+\clearpage
+\section{Data Visualisation}
+\label{apx:d}
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{graphics/raw_imports.png}
+\caption{Unfiltered visualisation of all import statements in the sourcecode}
+\label{fig:d:raw}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{graphics/module_abstraction_dirty.png}
+\caption{Visualisation of all import statements abstracted to top-level modules. 
+Thicker edges represent more imports (logarithmically scaled) and edge 
+direction represents which what is being imported to where.}
+\label{fig:d:abs}
+\end{figure}
+
+
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{graphics/module_abstraction_cleaned.png}
+\caption{Cleaned and colored visualisation of all import statements abstracted to top-level modules. 
+Thicker edges represent more imports (logarithmically scaled) and edge 
+direction represents which what is being imported to where.
+modules are appended with information about how many times they are imported and how many times they import another module: \\
+\hspace*{2em}\textit{out} -- times imported in a different top-level module \\
+\hspace*{2em}\textit{in} -- times importing a from different top-level module}
+\label{fig:d:clean}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[]{graphics/edge_tooltip.png}
+\caption{Tooltip displayed on edges when visualisation is inspected dynamically as .html\\
+\hspace*{2em}\textit{out} -- times imported in a different top-level module \\
+\hspace*{2em}\textit{in} -- times importing a from different top-level module}
+\label{fig:d:edgetooltip}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[]{graphics/node_tooltip.png}
+\caption{Tooltip displayed on nodes when visualisation is inspected dynamically as .html\\
+\hspace*{2em}\textit{out} -- times imported in a different top-level module \\
+\hspace*{2em}\textit{in} -- times importing a from different top-level module}
+\label{fig:d:nodetooltip}
+\end{figure}
+
+
+
+
 
 \end{document}

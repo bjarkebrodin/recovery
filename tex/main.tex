@@ -13,6 +13,7 @@
 \maketitle
 \tableofcontents
 
+\clearpage
 \section{Introduction}
 
 \href{https://zeeguu.com}{Zeegu} is a language learning assistance tool
@@ -56,16 +57,17 @@ how are components themed and global variables managed,
 how is routing done.
 
 \subsection{Mining data and producing a module view -- python3, networkx, pyvis}
+\label{mining}
 
 With a pretty good idea about the overall system structure,
 I begin semi-automatically attempting to map the codebase using python.
 Code can be found at \href{https://github.com/bjarkebrodin/recovery}{https://github.com/bjarkebrodin/recovery},
 or if for some reason inaccessible is also uploaded as an appendix (see Appendix \ref{apx:b}).
-I do this by first extracting the imports between files (see \ref{fig:d:raw})
-then subsequently I abstract to top-level modules and consider only imports in between such modules (see \ref{fig:d:abs} and \ref{fig:d:clean}).
+I do this by first extracting the imports between files (see Figure \ref{fig:d:raw})
+then subsequently I abstract to top-level modules and consider only imports in between such modules (see Figure \ref{fig:d:abs} and Figure \ref{fig:d:clean}).
 This approach is very similar to the one demonstrated by Mircea Lungo in the reconstruction lectures\cite{reconstruction}.
 These networks are visualized dynamically as html files and the reader can inspect them at will from the repository,
-to make the data inspectable they are programmed with tooltips that show detailed information about nodes (see ), and edges (see ).
+to make the data inspectable they are programmed with tooltips that show detailed information about nodes (see Figure \ref{fig:d:nodetooltip}), and edges (see Figure \ref{fig:d:edgetooltip}).
 I visualize the gathered data and attempt to infer interesting facts about the architecture.
 The outcome of this step is described in more detail throughout the remainder of this paper.
 I use the tools \verb|pyvis|\cite{pyvis} and \verb|networkx|\cite{networkx} to help me do this without implementing graphs and visualisation myself.
@@ -80,22 +82,64 @@ to get an idea about how much (potential) debt there might be in the way externa
 
 \section{Results}
 
-% show views
-placeholder
+% outline functionality of zeegu in a bit more detail?
 
+
+Through semi-automatically eliciting an approximate dependency (JavaScript \verb|import|) structure of the codebase
+(as described in Section \ref{mining}),
+I produce a module view of the Zeegu front-end (see Figure \ref{fig:3:clean}).
+
+\begin{figure}[h]
+  \centering 
+  \includegraphics[width=\textwidth]{graphics/module_abstraction_cleaned.png}
+  \caption{Cleaned and colored visualisation of all import statements abstracted to top-level modules. 
+  Thicker edges represent more imports (logarithmically scaled) and edge 
+  direction represents which what is being imported to where.
+  Colors do not have meaning but are meant to help better decode the network by eye.
+  Modules are appended with information about how many times they are imported and how many times they import another module.
+  A bigger circle means a module is imported more times by other modules (\textit{out} value),
+  i.e. might be important or central to the architecture. \\ \vspace*{.25em} \\
+  \hspace*{2em}\textit{out} -- times imported in a different top-level module \\
+  \hspace*{2em}\textit{in} -- times importing a from different top-level module}
+  \label{fig:3:clean}
+\end{figure}
+
+To frame the information presented in Figure \ref{fig:3:clean} and prime the reader 
+for a brief discussion of this data (Section \ref{discussion}),
+I briefly cover the purpose of some of the modules.
+
+% i18n
+% components
+% routers
+% hooks, utils, words
 
 
 
 \section{Discussion}
-% reflect on views
-placeholder
+\label{discussion}
+
+From visualising and inspecting the data more closely (see Figure \ref{fig:3:clean}), 
+both by looking at the overview but also by interacting with 
+\href{https://github.com/bjarkebrodin/recovery/blob/master/top_lvl_imports.html}{the generated html}
+to inspect exactly what imports what,
+I consider a few aspects of the system.
+
+% what would we guess the main role of the front-end architecture is?
+% - easily add new routes?
+% - easily iterate and develop: modifiability?
+% - easily collaborate: open source?
+% is component theme coherent across different components?
+% is component data-interface separated from component visuals?
+% can components be changed without modifying where they appear?
+% i18n coupled heavily to codebase?
+% seems logically well-grouped but not structurally well decoupled, expand
+% - many top-level modules have cross-dependencies, largely not structured as suppliers/consumers
+% - better import hierarchy might be nice
+% How coupled is routing to pages themselves?
+% - could we do this better?
 
 
-\section{Summary}
-% brief recap
-placeholder
-
-
+\clearpage
 \bibliography{lit}
 \bibliographystyle{ieeetran}
 

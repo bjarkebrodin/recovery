@@ -112,20 +112,17 @@ def main():
     nt.barnes_hut()
     nt.show('top_lvl_imports.html', notebook=False)
 
+  generate_raw_import_graph()
   generate_top_level_cross_imports_graph()
-
-
   # out: times imported in other module
   # in: times importing other module
 
-  # todo: get zeegu running and have a better look at how it operates?
-  # todo: look at truck and reflect
-  # todo: consider how color coupling could be improved
-  # todo: take a look at routing coupling
-  # todo: take a look at component changeability/redesignability
-  # todo: take a look at how easy translations would be to manage
-  # todo: consider the criticality of all of the above
-
-
+  # todo?: get zeegu running and have a better look at how it operates?
+  # todo?: look at truck and reflect
+  # todo?: consider how color coupling could be improved
+  # todo?: take a look at routing coupling
+  # todo?: take a look at component changeability/redesignability
+  # todo?: take a look at how easy translations would be to manage
+  # todo?: consider the criticality of all of the above
 
 if __name__ == '__main__': main()

@@ -121,7 +121,9 @@ in Section \ref{discussion} I go on consider some of the most interesting areas 
                         if nothing else only based on a react convention to have a module to dump all the hoooks in.
                         % for discussion: hooks could be kept closer to what they provide functions to, keep code that changes together close together!
                         % for discussion: grouped together based on which react abstraction they use, not what they logically belong to
-  \item \verb|components| -- placeholder
+  \item \verb|components| -- (Supposedly) A module of the general UI components used in the frontend,
+                             at first glance it is very interesting that components seems to import from both \verb|reader|, \verb|i18n| and \verb|exercises| -- there are also 2 imports from \verb|utils| but this is just common code so not of concern.
+                             % for discussion: criss-cross dependencies, intercoupling
   \item \verb|contexts| -- placeholder
   \item \verb|PrivateRoute|, \verb|MainAppRouter|, \verb|PrivateRouteWithSidebar| -- placeholder
   \item \verb|i18n| -- placeholder
@@ -167,6 +169,14 @@ I consider a few aspects of the system.
 % Some work could be done to decouple and streamline inter-module dependencies,
 % making it easier to develop and potentially version components separately as the codebase grows!
 
+\vspace*{1em}
+\noindent
+I would have liked to see some metrics, 
+especially link depth and cyclomatic complexity (as ChatGPT suggested, see Appendix \ref{apx:a} p.6) 
+but this did not work at first attempt and I was unable to invest sufficient time in getting working.
+This would have been an interesting addition to the import structure!
+I suspect especially cyclomatic complexity would be quite high 
+because of the degree of coupling suggested by the module view.
 
 \clearpage
 \bibliography{lit}

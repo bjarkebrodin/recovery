@@ -4,10 +4,10 @@
 \contentsline {subsection}{\numberline {2.2}Getting a more exact feel of function -- running the system}{2}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Researching and briefly parsing the code manually}{2}{subsection.2.3}%
 \contentsline {subsection}{\numberline {2.4}Mining data and producing a module view -- python3, networkx, pyvis}{2}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}Superficially assesing external dependency health -- npm audit}{2}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.5}Superficially assesing external dependency health -- npm audit}{3}{subsection.2.5}%
 \contentsline {section}{\numberline {3}Results}{3}{section.3}%
-\contentsline {section}{\numberline {4}Discussion}{4}{section.4}%
-\contentsline {section}{\numberline {A}ChatGPT Transcript}{6}{appendix.A}%
-\contentsline {section}{\numberline {B}Uploaded Files}{15}{appendix.B}%
-\contentsline {section}{\numberline {C}Approximate Time Allocation}{16}{appendix.C}%
-\contentsline {section}{\numberline {D}Data Visualisation}{17}{appendix.D}%
+\contentsline {section}{\numberline {4}Discussion}{5}{section.4}%
+\contentsline {section}{\numberline {A}ChatGPT Transcript}{7}{appendix.A}%
+\contentsline {section}{\numberline {B}Uploaded Files}{16}{appendix.B}%
+\contentsline {section}{\numberline {C}Approximate Time Allocation}{17}{appendix.C}%
+\contentsline {section}{\numberline {D}Data Visualisation}{18}{appendix.D}%

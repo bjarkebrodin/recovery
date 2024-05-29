@@ -19,7 +19,9 @@
 \href{https://zeeguu.com}{Zeegu} is a language learning assistance tool
 that helps users learn by reading and revising previously read language on a word-by-word basis.
 It contains serveral features such as tracking progress and providing material for language learning
-with on demand translations.
+with on demand translations. 
+It is also meant to offer some functionality to teachers interacting with the material provided,
+but I have not probed this part of the app much and leave this mostly out of scope.
 
 \vspace*{1em}\noindent
 The front-end of Zeegu is the subject matter of this paper.
@@ -106,7 +108,7 @@ I produce a module view of the Zeegu front-end (see Figure \ref{fig:3:clean}).
 
 To frame the information presented in Figure \ref{fig:3:clean} and prime the reader 
 for a brief discussion of this data (Section \ref{discussion}),
-I begin by briefly outlining and summarizing the degree of interest of some of the most referenced modules,
+I begin by briefly outlining and summarizing the degree of interest of some of the most referenced/central modules,
 in Section \ref{discussion} I go on consider some of the most interesting areas of this list.
 
 \begin{itemize}
@@ -121,22 +123,43 @@ in Section \ref{discussion} I go on consider some of the most interesting areas 
                         if nothing else only based on a react convention to have a module to dump all the hoooks in.
                         % for discussion: hooks could be kept closer to what they provide functions to, keep code that changes together close together!
                         % for discussion: grouped together based on which react abstraction they use, not what they logically belong to
+  \item \verb|contexts| -- Much like the \verb|hooks| module, this module contains injectable "contexts", 
+                           a react specific way to do inversion of dependency with a provider/consumer paradigm.
   \item \verb|components| -- (Supposedly) A module of the general UI components used in the frontend,
                              at first glance it is very interesting that components seems to import from both \verb|reader|, \verb|i18n| and \verb|exercises| -- there are also 2 imports from \verb|utils| but this is just common code so not of concern.
                              % for discussion: criss-cross dependencies, intercoupling
-  \item \verb|contexts| -- placeholder
-  \item \verb|PrivateRoute|, \verb|MainAppRouter|, \verb|PrivateRouteWithSidebar| -- placeholder
-  \item \verb|i18n| -- placeholder
-  \item \verb|articles| -- placeholder
-  \item \verb|words| -- placeholder
-  \item \verb|pages| -- placeholder
-  \item \verb|teacher| -- placeholder
-  \item \verb|reader| -- placeholder
-  \item \verb|assorted| -- placeholder
+  \item \verb|PrivateRoute|, \verb|MainAppRouter|, \verb|PrivateRouteWithSidebar| -- Modules for navigating the different parts of the site,
+                                                                                     these should arguably be encapsulated in a \verb|routing|
+                                                                                     top-level module, more on this in Section \ref{discussion}.
+  \item \verb|i18n| -- This module contains the configuration of the \textbf{i18n} module for string internationalization,
+                       meaning mostly a collection of strings in different languages to be used elsewhere.
+                       Since it only exports and doesn't import from any other local module this is mostly uninteresting,
+                       however, there may have been a benefit to adding a layer of indirection between how translations are implemented
+                       and the abstraction of fetching strings by lookup. There is also a bit of funny business regarding how non-global
+                       language is handled, it seems to be somewhat scattered around the codebase.
+  \item \verb|articles| -- This module contains code related to showing, finding and working with articles on the Zeegu platform.
+                           It exports to only \verb|teacher| and routers making it seem relatively well-encapsulated.
+  \item \verb|words| -- Contains code for the words page and functionality for working with words.
+                        The module is relatively uninteresting except for the fact that it has cross-dependencies with \verb|exercises|.
+  \item \verb|teacher| -- This module contains functionality for teachers, 
+                          it almost exclusively imports from \verb|i18n| and \verb|components|
+                          and is only imported in routers, making it quite uninteresting.
+  \item \verb|pages| -- This module contains the markup and some components used for some of the pages of the app,
+                        not all though, some pages are in \verb|landingPage| and again some other pages are elsewhere.
+                        I elaborate on this in Section \ref{discussion}.
+  \item \verb|reader| -- This module implements the article reader and is thus a quite central part of the app,
+                         it is however at first glance quite well decoupled and logically encapsulated nicely,
+                         meaning initially, not very problematic or interesting structurally.
+  \item \verb|assorted| -- This module contains miscellaneous utility code and a single hook,
+                           it is opaque to me why this code is not in \verb|utils| and \verb|hooks| instead.
 \end{itemize}
 
 
-% summarize what is most interesting, carry on in discussion
+Note that to limit the scope I have somewhat arbitrarily elected a size/interest cutoff
+of which top-level modules to include in this list,
+otherwise there would simply be too much to cover.
+Even discussing all the modules I list above in more depth would be relatively plentiful,
+thus, I cover only some of the more appearant and superficial concerns in the following section.
 
 
 \section{Discussion}

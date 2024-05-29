@@ -106,13 +106,35 @@ I produce a module view of the Zeegu front-end (see Figure \ref{fig:3:clean}).
 
 To frame the information presented in Figure \ref{fig:3:clean} and prime the reader 
 for a brief discussion of this data (Section \ref{discussion}),
-I briefly cover the purpose of some of the modules.
+I begin by briefly outlining and summarizing the degree of interest of some of the most referenced modules,
+in Section \ref{discussion} I go on consider some of the most interesting areas of this list.
 
-% i18n
-% components
-% routers
-% hooks, utils, words
+\begin{itemize}
+  \item \verb|utils| -- A collection of project local utility code.
+                        It has no dependency on other internal modules, 
+                        however, 
+                        there may be something to be said about
+                        its submodules \verb|utils.routing| and \verb|utils.cookies|.
+                        % for discussion: rather opaque, suggest routing and cookies as top level modules
+  \item \verb|hooks| -- A module of various react hooks supporting ad-hoc stateful component enhancement.
+                        This is slightly interesting because somewhat random functionality seems grouped together,
+                        if nothing else only based on a react convention to have a module to dump all the hoooks in.
+                        % for discussion: hooks could be kept closer to what they provide functions to, keep code that changes together close together!
+                        % for discussion: grouped together based on which react abstraction they use, not what they logically belong to
+  \item \verb|components| -- placeholder
+  \item \verb|contexts| -- placeholder
+  \item \verb|PrivateRoute|, \verb|MainAppRouter|, \verb|PrivateRouteWithSidebar| -- placeholder
+  \item \verb|i18n| -- placeholder
+  \item \verb|articles| -- placeholder
+  \item \verb|words| -- placeholder
+  \item \verb|pages| -- placeholder
+  \item \verb|teacher| -- placeholder
+  \item \verb|reader| -- placeholder
+  \item \verb|assorted| -- placeholder
+\end{itemize}
 
+
+% summarize what is most interesting, carry on in discussion
 
 
 \section{Discussion}
@@ -121,8 +143,9 @@ I briefly cover the purpose of some of the modules.
 From visualising and inspecting the data more closely (see Figure \ref{fig:3:clean}), 
 both by looking at the overview but also by interacting with 
 \href{https://github.com/bjarkebrodin/recovery/blob/master/top_lvl_imports.html}{the generated html}
-to inspect exactly what imports what,
+to inspect exactly what is imported in which module,
 I consider a few aspects of the system.
+
 
 % what would we guess the main role of the front-end architecture is?
 % - easily add new routes?
@@ -137,6 +160,12 @@ I consider a few aspects of the system.
 % - better import hierarchy might be nice
 % How coupled is routing to pages themselves?
 % - could we do this better?
+
+
+% A lot of the structure seems very makeshift and iteratively put together 
+% without much architectural intention (beyond contexts, hooks, translations).
+% Some work could be done to decouple and streamline inter-module dependencies,
+% making it easier to develop and potentially version components separately as the codebase grows!
 
 
 \clearpage

@@ -8,6 +8,5 @@
 \contentsline {section}{\numberline {3}Results}{3}{section.3}%
 \contentsline {section}{\numberline {4}Discussion}{5}{section.4}%
 \contentsline {section}{\numberline {A}ChatGPT Transcript}{7}{appendix.A}%
-\contentsline {section}{\numberline {B}Uploaded Files}{16}{appendix.B}%
-\contentsline {section}{\numberline {C}Approximate Time Allocation}{17}{appendix.C}%
-\contentsline {section}{\numberline {D}Data Visualisation}{18}{appendix.D}%
+\contentsline {section}{\numberline {B}Approximate Time Allocation}{16}{appendix.B}%
+\contentsline {section}{\numberline {C}Data Visualisation}{17}{appendix.C}%

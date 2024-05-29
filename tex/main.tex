@@ -63,8 +63,7 @@ how is routing done.
 
 With a pretty good idea about the overall system structure,
 I begin semi-automatically attempting to map the codebase using python.
-Code can be found at \href{https://github.com/bjarkebrodin/recovery}{https://github.com/bjarkebrodin/recovery},
-or if for some reason inaccessible is also uploaded as an appendix (see Appendix \ref{apx:b}).
+Code can be found at \href{https://github.com/bjarkebrodin/recovery}{https://github.com/bjarkebrodin/recovery}.
 I do this by first extracting the imports between files (see Figure \ref{fig:d:raw})
 then subsequently I abstract to top-level modules and consider only imports in between such modules (see Figure \ref{fig:d:abs} and Figure \ref{fig:d:clean}).
 This approach is very similar to the one demonstrated by Mircea Lungo in the reconstruction lectures\cite{reconstruction}.
@@ -83,9 +82,6 @@ to get an idea about how much (potential) debt there might be in the way externa
 
 
 \section{Results}
-
-% outline functionality of zeegu in a bit more detail?
-
 
 Through semi-automatically eliciting an approximate dependency (JavaScript \verb|import|) structure of the codebase
 (as described in Section \ref{mining}),
@@ -130,7 +126,7 @@ in Section \ref{discussion} I go on consider some of the most interesting areas 
                              % for discussion: criss-cross dependencies, intercoupling
   \item \verb|PrivateRoute|, \verb|MainAppRouter|, \verb|PrivateRouteWithSidebar| -- Modules for navigating the different parts of the site,
                                                                                      these should arguably be encapsulated in a \verb|routing|
-                                                                                     top-level module, more on this in Section \ref{discussion}.
+                                                                                     top-level module and could then be decoupled by fetching routes by lookup instead of reference. It is however not that bad to couple routing tightly as it is mostly expected in a react app of this size and state in development.
   \item \verb|i18n| -- This module contains the configuration of the \textbf{i18n} module for string internationalization,
                        meaning mostly a collection of strings in different languages to be used elsewhere.
                        Since it only exports and doesn't import from any other local module this is mostly uninteresting,
@@ -146,7 +142,6 @@ in Section \ref{discussion} I go on consider some of the most interesting areas 
                           and is only imported in routers, making it quite uninteresting.
   \item \verb|pages| -- This module contains the markup and some components used for some of the pages of the app,
                         not all though, some pages are in \verb|landingPage| and again some other pages are elsewhere.
-                        I elaborate on this in Section \ref{discussion}.
   \item \verb|reader| -- This module implements the article reader and is thus a quite central part of the app,
                          it is however at first glance quite well decoupled and logically encapsulated nicely,
                          meaning initially, not very problematic or interesting structurally.
@@ -171,6 +166,56 @@ both by looking at the overview but also by interacting with
 to inspect exactly what is imported in which module,
 I consider a few aspects of the system.
 
+\vspace*{1em}
+\noindent
+Starting off,
+there seems to be several top level modules depending on eachother indicating a tighter degree of coupling
+in between them than we would ideally like:
+\begin{itemize}
+  \item \verb|exercises| $\leftrightarrow$ \verb|components|
+  \item \verb|exercises| $\leftrightarrow$ \verb|words|
+  \item \verb|reader| $\leftrightarrow$ \verb|components|
+  \item \verb|routers| $\leftrightarrow$ \verb|*| (transitively)
+\end{itemize}
+
+\vspace*{1em}
+\noindent
+Additionally,
+it seems less that ideal at first glance that some utility code is in \verb|utils| and some other utility code is in \verb|assorted|,
+there might be an intention behind this but it would also be explainable by different contributers using different modules for their
+helper-code (I did not check this in the git files).
+Either way it seems easy to refactor this to enhance overall structure.
+
+
+\vspace*{1em}
+\noindent
+The \verb|hooks| module seems to group code by which category of react abstraction it uses.
+While this is probably quite conventional,
+I would argue that there would be a point to having hooks implemented closer to the code that they use.
+As an example of my point,
+\verb|hooks.useExtensionCommunication| is essentially just a hook-based interface for the code implemented in
+\verb|utils.extension.extensionCommunication|,
+thus I would consider moving the hook to \verb|utils.extension.useExtensionCommunication| (and similarly for other hooks).
+This would clean the top-level scope and would make sense since when crawling backwards from where the hook is imported
+would bring you straight to both files, potentially making it less opaque to debug and understand.
+
+
+\vspace*{1em}
+Many more things could be said about the system,
+but for the sake of brevity I shall end my considerations here.
+Overall,
+even though a few top-level modules are tightly coupled,
+the coupling does not seem particularly tight which is positive.
+Appropriate react abstractions seem used reasonably well (hooks and contexts)
+and translations are injected from a single point (even if the coupling to the \textbf{i18n} library is a bit tight).
+The top-level structure could be more intentional,
+providing developers with a better idea of how new code is categorized 
+and assistance in forming a mapping between the visual/navigable structure of the app and the structure of the code.
+By this I mean a clear way to guess exactly where to find the code responsible for rendering what is currently visible.
+
+
+
+
 
 % what would we guess the main role of the front-end architecture is?
 % - easily add new routes?
@@ -192,9 +237,11 @@ I consider a few aspects of the system.
 % Some work could be done to decouple and streamline inter-module dependencies,
 % making it easier to develop and potentially version components separately as the codebase grows!
 
+
+
 \vspace*{1em}
 \noindent
-I would have liked to see some metrics, 
+I would have liked to produce some metrics, 
 especially link depth and cyclomatic complexity (as ChatGPT suggested, see Appendix \ref{apx:a} p.6) 
 but this did not work at first attempt and I was unable to invest sufficient time in getting working.
 This would have been an interesting addition to the import structure!
@@ -215,21 +262,14 @@ because of the degree of coupling suggested by the module view.
 \includepdf[width=\textwidth,pages=2-]{appendix/chatgpt.pdf}
 
 \clearpage
-\section{Uploaded Files}
-\label{apx:b}
-\begin{itemize}
-  \item \verb|recovery.zip| -- repository containing code for architectural recovery
-\end{itemize}
-
-\clearpage
 \section{Approximate Time Allocation}
 \label{apx:c}
 \begin{itemize}
-  \item Development \& tool learning: 60\%
+  \item Development \& tool learning: 55\%
   \item Researching react: 5\%
   \item Playing with/wrangling data: 10\%
-  \item Reflecting on results: 10\%
-  \item Writing: 15\%
+  \item Reflecting on results: 5\%
+  \item Writing: 25\%
 \end{itemize}
 
 \clearpage
